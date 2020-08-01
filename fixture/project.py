@@ -1,4 +1,5 @@
 from model.project import Project
+import random
 
 
 class ProjectHelper:
@@ -23,7 +24,7 @@ class ProjectHelper:
     def open_projects_page(self):
         dw = self.app.dw
         if not (dw.current_url.endswith("/manage_proj_page.php") and
-                len(dw.find_element_by_css_selector("input[value*='Create New Project'")) > 0):
+                len(dw.find_elements_by_css_selector("input[value*='Create New Project'")) > 0):
             dw.find_element_by_link_text("Manage").click()
             dw.find_element_by_link_text("Manage Projects").click()
 
@@ -32,17 +33,17 @@ class ProjectHelper:
         dw = self.app.dw
         self.open_projects_page()
         #add new project
-        dw.find_element_by_css_selector("input[value*='Create New Project'")
+        dw.find_element_by_css_selector(".width100 input[value='Create New Project'").click()
         self.fill_project_form(project)
         # submit project form creation
-        dw.find_element_by_link_text("input[type='submit']").click()
+        dw.find_element_by_css_selector("input[value='Add Project']").click()
         self.project_cache = None
 
 
     def count(self):
         dw = self.app.dw
         self.open_projects_page()
-        return len(dw.find_elements_by_css_selector(".width100 tr[class*='row-'")[2:])
+        return len(dw.find_elements_by_css_selector(".width100 tr[class*='row-'")[1:])
 
 
     project_cache = None
@@ -52,7 +53,7 @@ class ProjectHelper:
         if self.project_cache is None:
             dw = self.app.dw
             self.open_projects_page()
-            self.contact_cache = []
+            self.project_cache = []
             rows = dw.find_elements_by_css_selector(".width100 tr[class*='row-'")[1:]
             for row in rows:
                 cells = row.find_elements_by_tag_name("td")
@@ -62,17 +63,16 @@ class ProjectHelper:
         return list(self.project_cache)
 
 
-    def select_project_to_del_by_index(self, index):
+    def select_project_by_index(self, index):
         dw = self.app.dw
-        projects = dw.find_elements_by_css_selector(".width100 tr[class*='row-' href")[1:]
-        projects[index].click()
+        (dw.find_elements_by_css_selector(".width100 tr[class*='row-']>td>a:nth-child(1)")[5:])[index].click()
 
 
-    def delete_group_by_index(self, index):
+    def delete_project_by_index(self, index):
         dw = self.app.dw
         self.open_projects_page()
-        self.select_project_to_del_by_index(index)
+        self.select_project_by_index(index)
         # submit deletion
-        dw.find_element_by_css_selector("value='Delete Project'").click()
-        dw.find_element_by_css_selector("value='Delete Project'").click()
-        self.group_cache = None
+        dw.find_element_by_css_selector("input[value='Delete Project']").click()
+        dw.find_element_by_css_selector("input[value='Delete Project']").click()
+        self.project_cache = None

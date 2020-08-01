@@ -3,10 +3,6 @@ import random
 import string
 
 
-# constant = [
-#     Project(name="name1", description="description1")
-# ]
-
 
 def random_string(prefix, maxlen):
     symbols = string.ascii_letters + string.digits + string.punctuation + " "*10
