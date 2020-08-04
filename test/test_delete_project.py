@@ -2,7 +2,10 @@ from model.project import Project
 from random import randrange
 
 
-def test_delete_any_group(app):
+def test_delete_any_project(app):
+    app.session.login("administrator", "root")
+    assert app.session.is_logged_in_as("administrator")
+
     if len(app.project.get_project_list()) == 0:
         app.project.create(Project(name="test"))
     old_projects = app.project.get_project_list()

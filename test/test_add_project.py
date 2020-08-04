@@ -5,6 +5,9 @@ import pytest
 
 @pytest.mark.parametrize("project", testdata, ids=[repr(x) for x in testdata])
 def test_add_project(app, project):
+    app.session.login("administrator", "root")
+    assert app.session.is_logged_in_as("administrator")
+
     old_projects = app.project.get_project_list()
     app.project.create(project)
     assert len(old_projects) + 1 == app.project.count()
