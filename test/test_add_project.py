@@ -4,13 +4,13 @@ import pytest
 
 
 @pytest.mark.parametrize("project", testdata, ids=[repr(x) for x in testdata])
-def test_add_project(app, project):
-    app.session.login("administrator", "root")
-    assert app.session.is_logged_in_as("administrator")
+def test_add_project(app, project, config):
 
-    old_projects = app.project.get_project_list()
+    username = config['webadmin']['username']
+    password = config['webadmin']['password']
+
+    old_projects = app.soap.get_project_list(username, password)
     app.project.create(project)
-    assert len(old_projects) + 1 == app.project.count()
-    new_projects = app.project.get_project_list()
+    new_projects = app.soap.get_project_list(username, password)
     old_projects.append(project)
     assert sorted(old_projects, key=lambda project: project.name) == sorted(new_projects, key=lambda project: project.name)
