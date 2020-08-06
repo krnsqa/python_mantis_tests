@@ -24,32 +24,6 @@ class MailHelper:
                         pop.dele(n+1)
                         pop.quit()
                         return msg.get_payload()
-            pop.quit()
+            pop.close()
             time.sleep(3)
         return None
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
